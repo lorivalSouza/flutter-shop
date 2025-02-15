@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop/pages/product_detail_page.dart';
+import 'package:shop/utils/app_routes.dart';
 
 import 'pages/products_overview_page.dart';
 
@@ -14,10 +16,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-          primaryColor: Colors.blue,
-          primarySwatch: Colors.blue,
-          secondaryHeaderColor: Colors.amber),
+        primaryColor: Colors.purple,
+        primarySwatch: Colors.blue,
+        hintColor: Colors.deepOrange,
+        secondaryHeaderColor: Colors.amber,
+        fontFamily: 'Lato',
+      ),
       home: ProductsOverviewPage(),
+      routes: {
+        AppRoutes.productDetailPage: (ctx) => ProductDetailPage(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
