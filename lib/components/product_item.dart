@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shop/utils/app_routes.dart';
 
 import '../models/product.dart';
-import '../pages/product_detail_page.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
