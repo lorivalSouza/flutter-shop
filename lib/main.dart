@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/models/cart.dart';
+import 'package:shop/pages/cart_detail_page.dart';
+import 'package:shop/pages/cart_page.dart';
 import 'package:shop/pages/product_detail_page.dart';
 import 'package:shop/utils/app_routes.dart';
 
@@ -15,20 +18,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProductList(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => ProductList(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Cart(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primaryColor: Colors.purple,
-          primarySwatch: Colors.blue,
           hintColor: Colors.deepOrange,
           secondaryHeaderColor: Colors.amber,
           fontFamily: 'Lato',
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
+              .copyWith(error: Colors.red),
         ),
         home: ProductsOverviewPage(),
         routes: {
           AppRoutes.productDetailPage: (ctx) => ProductDetailPage(),
+          AppRoutes.cartPage: (ctx) => CartPage(),
+          AppRoutes.cartDetailPage: (ctx) =>
+              CartDetailPage(itemName: '', quantity: 1, price: 0.0),
         },
         debugShowCheckedModeBanner: false,
       ),
