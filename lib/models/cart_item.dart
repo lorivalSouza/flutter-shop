@@ -2,10 +2,10 @@ class CartItem {
   final String id;
   final String productId;
   final String name;
-  final int quantity;
+  int quantity;
   final double price;
 
-  const CartItem({
+  CartItem({
     required this.id,
     required this.productId,
     required this.name,

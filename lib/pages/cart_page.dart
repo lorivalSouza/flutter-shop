@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/models/order_list.dart';
 
 import '../models/cart.dart';
 import 'cart_detail_page.dart';
@@ -30,7 +31,7 @@ class CartPage extends StatelessWidget {
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               Text(
-                'R\$${cart.totalAmount}', // Replace with actual total calculation
+                'R\$ ${cart.totalAmount.toStringAsFixed(2)}', // Replace with actual total calculation
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -83,7 +84,46 @@ class CartPage extends StatelessWidget {
                       icon: Icon(Icons.delete),
                       color: Theme.of(context).colorScheme.error,
                       onPressed: () {
-                        cart.clear();
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: Text(
+                              'Confirme Remoção',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            content: Text(
+                              'Você tem certeza que deseja excluir os produtos do carrinho?',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(
+                                  'Cancelar',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                ),
+                                child: Text('Remover'),
+                                onPressed: () {
+                                  cart.removeAllItems(cart.items.values
+                                      .toList()[index]
+                                      .productId); // Remove item
+                                  Navigator.of(ctx).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -95,7 +135,11 @@ class CartPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                // Handle checkout action
+                Provider.of<OrderList>(
+                  context,
+                  listen: false,
+                ).addOrder(cart);
+                cart.clear();
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -107,7 +151,7 @@ class CartPage extends StatelessWidget {
                 children: [
                   Icon(Icons.payment),
                   SizedBox(width: 8.0),
-                  Text('Proceed to Checkout'),
+                  Text('Fazer o check-out'),
                 ],
               ),
             ),

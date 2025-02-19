@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/components/app_drawer.dart';
 import 'package:shop/models/cart.dart';
 import '../components/badgee.dart';
 import '../components/product_grid.dart';
@@ -23,7 +24,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Products Overview'),
+        title: Text('Visão geral dos produtos'),
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
@@ -63,6 +64,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ProductGrid(_showFavoriteOnly),
+      drawer: AppDrawer(),
     );
   }
 }
