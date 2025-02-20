@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/product.dart';
-import 'product_item.dart';
+import 'product_grid_item.dart';
 import 'product_list.dart';
 
 class ProductGrid extends StatelessWidget {
@@ -18,7 +18,7 @@ class ProductGrid extends StatelessWidget {
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         // Já existia a lista de Produtos no provider, não foi necessário criar um novo provider.
         value: loadProducts[i],
-        child: ProductItem(),
+        child: ProductGridItem(),
       ),
       itemCount: loadProducts.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -15,6 +15,10 @@ class ProductList extends ChangeNotifier {
     _items.add(product);
     notifyListeners();
   }
+
+  int get itemsCount {
+    return _items.length;
+  }
 }
 
 //Aplicando o favorites na aplicação toda
