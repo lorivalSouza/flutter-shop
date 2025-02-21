@@ -9,6 +9,7 @@ import 'package:shop/pages/product_detail_page.dart';
 import 'package:shop/utils/app_routes.dart';
 
 import 'components/product_list.dart';
+import 'pages/product_form_page.dart';
 import 'pages/products_page.dart';
 import 'pages/products_overview_page.dart';
 
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.cartDetailPage: (ctx) =>
               CartDetailPage(itemName: '', quantity: 1, price: 0.0),
           AppRoutes.productsPage: (ctx) => ProductsPage(),
+          AppRoutes.productFormPage: (ctx) => ProductFormPage(),
         },
         debugShowCheckedModeBanner: false,
       ),

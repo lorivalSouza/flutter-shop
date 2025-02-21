@@ -5,6 +5,7 @@ class AppRoutes {
   static const String cartDetailPage = '/cart-detail';
   static const String ordersPage = '/orders';
   static const String productsPage = '/products';
+  static const String productFormPage = '/product-form';
   //static const String CartItemWidget = '/cart-item';
   /*
   static const String home = '/';
