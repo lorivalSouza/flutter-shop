@@ -1,11 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/components/product_list.dart';
 
 import '../models/product.dart';
 
 class ProductFormPage extends StatefulWidget {
-  const ProductFormPage({Key? key}) : super(key: key);
+  const ProductFormPage({super.key});
 
   @override
   State<ProductFormPage> createState() => _ProductFormPageState();
@@ -14,44 +14,55 @@ class ProductFormPage extends StatefulWidget {
 class _ProductFormPageState extends State<ProductFormPage> {
   final _imageUrlController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _formData = Map<String, Object>();
+  final Map<String, Object> _formData = {};
 
   @override
   void initState() {
     super.initState();
-    _imageUrlController.addListener(() {
-      setState(() {});
-    });
+    _imageUrlController.addListener(_updateImageUrl);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+      if (arg != null && arg is Product) {
+        final product = arg;
+        _formData['id'] = product.id;
+        _formData['name'] = product.name;
+        _formData['price'] = product.price;
+        _formData['description'] = product.description;
+        _formData['imageUrl'] = product.imageUrl;
+
+        _imageUrlController.text = _formData['imageUrl'].toString();
+      }
+    }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _imageUrlController.removeListener(_updateImageUrl);
     _imageUrlController.dispose();
+    super.dispose();
   }
 
   void _updateImageUrl() {
     setState(() {});
   }
 
+  void clearForm() {
+    _formKey.currentState?.reset();
+    _imageUrlController.clear();
+  }
+
   void submitForm() {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) {
-      return;
-    } else {
-      final newProduct = Product(
-          id: Random().nextDouble().toString(),
-          name: _formData['name'].toString(),
-          price: _formData['price'] as double,
-          description: _formData['description'].toString(),
-          imageUrl: _formData['imageUrl'].toString());
-      _formKey.currentState!.save();
-      print(newProduct.id);
-      print(newProduct.name);
-      print(newProduct.price);
-      print(newProduct.description);
-      print(newProduct.imageUrl);
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+
+      Provider.of<ProductList>(context, listen: false).saveProduct(_formData);
+      Navigator.of(context).pop();
     }
   }
 
@@ -63,9 +74,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
-            onPressed: () {
-              submitForm();
-            },
+            onPressed: submitForm,
             icon: Icon(Icons.save),
           ),
         ],
@@ -79,26 +88,29 @@ class _ProductFormPageState extends State<ProductFormPage> {
               Column(
                 children: [
                   TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Nome',
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                          ),
+                    initialValue: _formData['name']?.toString(),
+                    decoration: InputDecoration(
+                      labelText: 'Nome',
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.red,
                         ),
                       ),
-                      textInputAction: TextInputAction.next,
-                      onSaved: (name) => _formData['name'] = name.toString(),
-                      validator: (value) {
-                        if (value!.trim().isEmpty) {
-                          return 'Informe um nome válido!';
-                        }
-                        if (value.trim().length < 3) {
-                          return 'Informe um nome com no mínimo 3 letras!';
-                        }
-                        return null;
-                      }),
+                    ),
+                    textInputAction: TextInputAction.next,
+                    onSaved: (name) => _formData['name'] = name.toString(),
+                    validator: (value) {
+                      if (value!.trim().isEmpty) {
+                        return 'Informe um nome válido!';
+                      }
+                      if (value.trim().length < 3) {
+                        return 'Informe um nome com no mínimo 3 letras!';
+                      }
+                      return null;
+                    },
+                  ),
                   TextFormField(
+                    initialValue: _formData['price']?.toString(),
                     decoration: InputDecoration(
                       labelText: 'Preço',
                       errorBorder: OutlineInputBorder(
@@ -125,6 +137,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     ),
                   ),
                   TextFormField(
+                    initialValue: _formData['description']?.toString(),
                     decoration: InputDecoration(
                       labelText: 'Descrição',
                       errorBorder: OutlineInputBorder(
@@ -144,6 +157,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       if (value.trim().length < 10) {
                         return 'Informe um nome com no mínimo 10 letras!';
                       }
+                      return null;
                     },
                   ),
                   Row(
@@ -206,9 +220,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      submitForm();
-                    },
+                    onPressed: submitForm,
                     child: Text('Salvar'),
                   ),
                 ],

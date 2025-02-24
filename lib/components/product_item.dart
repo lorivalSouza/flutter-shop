@@ -24,7 +24,7 @@ class ProductItem extends StatelessWidget {
               icon: Icon(Icons.edit),
               onPressed: () {
                 Navigator.of(context).pushNamed(
-                  '/product-detail',
+                  '/product-form',
                   arguments: product,
                 );
               },
